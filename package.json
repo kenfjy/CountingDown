@@ -1,0 +1,24 @@
+{
+  "name": "CountingDown",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/klee-arc/CountingDown.git"
+  },
+  "keywords": [
+    "npm",
+    "node",
+    "javascript"
+  ],
+  "author": "Ken Fujiyoshi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/klee-arc/CountingDown/issues"
+  },
+  "homepage": "https://github.com/klee-arc/CountingDown"
+}
