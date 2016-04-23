@@ -32,28 +32,46 @@ function setup() {
 
 function draw() {
   cv = document.getElementById("canvas");
+
+  $("#canvas")
+    .mousedown({canvas : cv}, mouseDown)
+    .mouseup(mouseUp)
+    .mousemove({canvas : cv}, mouseMove);
+
   if (cv.getContext) {
     ctx = cv.getContext("2d");
 
-    timeline.drawGrid(ctx);
-    timeline.draw(ctx);
-    timeline.drawCtrl(ctx);
+    loop(ctx);
+  }
+}
 
-    var h = timeline.getPoint(0.5);
-    var w = timeline.getX(50);
-    ctx.save();
-    ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
-    ctx.beginPath();
-    ctx.arc(h.x, h.y, 5, 0, 2 * Math.PI, false);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(w.x, w.y, 5, 0, 2 * Math.PI, false);
-    ctx.fill();
-    ctx.restore();
+function loop(ctx) {
+  timeline.drawGrid(ctx);
+  timeline.draw(ctx);
+  timeline.drawCtrl(ctx);
 
-    $("#canvas").mouseup(timeline.mouseUp)
-      .mousemove({canvas : cv}, timeline.mouseMove)
-      .mousedown(timeline.mouseDown);
+  var h = timeline.getPoint(0.5);
+  var w = timeline.getX(50);
+  ctx.save();
+  ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
+  ctx.beginPath();
+  ctx.arc(h.x, h.y, 5, 0, 2 * Math.PI, false);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(w.x, w.y, 5, 0, 2 * Math.PI, false);
+  ctx.fill();
+  ctx.restore();
+}
+
+function mouseDown(event) {
+  timeline.mouseDown(event);
+}
+function mouseUp(event) {
+  timeline.mouseUp(event);
+}
+function mouseMove(event) {
+  if (timeline.mouseMove(event)) {
+    console.log("refresh");
   }
 }
 

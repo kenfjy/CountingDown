@@ -1,4 +1,5 @@
-var threshold = 0.0001;
+var calcThreshold = 0.0001;
+var mouseThreshold = 30;
 var gridNum = 10;
 
 /* 
@@ -8,6 +9,9 @@ var Vector = function (t_x, t_y) {
   this.x = t_x;
   this.y = t_y;
 };
+Vector.prototype.dist = function(other) {
+  return Math.sqrt(Math.pow(this.x-other.x,2) + Math.pow(this.y-other.y,2));
+}
 Vector.prototype.dump = function() {
   console.log("x: " + this.x + ", y: " + this.y);
 };
@@ -21,7 +25,9 @@ var Bezier = function(c, c1, c2, c3, c4) {
   this.startCtrlPoint = this.invert(c2);
   this.endCtrlPoint = this.invert(c3);
   this.endPoint = this.invert(c4);
-  this.mousePressed = false;
+
+  this.startCtrlPressed = false;
+  this.endCtrlPressed = false;
 }
 
 Bezier.prototype.invert = function(vec) {
@@ -94,7 +100,7 @@ Bezier.prototype.getX = function(ypos) {
     var range = [0, rel_y, 1];
 
     var tpos = this.getPoint(range[1]); 
-    while (Math.abs(tpos.y - ypos) > threshold) {
+    while (Math.abs(tpos.y - ypos) > calcThreshold) {
       if (tpos.y < ypos) {
         range[2] = range[1];
         range[1] = (range[1] + range[0]) / 2;
@@ -132,20 +138,44 @@ Bezier.prototype.dump = function() {
  * Event listeners
  */
 Bezier.prototype.mouseUp = function(event) {
-  this.mousePressed = false;
-  console.log("mouse raised");
+  this.startCtrlPressed = false;
+  this.endCtrlPressed = false;
 }
 
 Bezier.prototype.mouseDown = function(event) {
-  this.mousePressed = true;
-  console.log("mouse lowered");
-  console.log(event);
+  var rect = event.data.canvas.getBoundingClientRect();
+  var mouse = new Vector(
+      event.clientX - rect.left,
+      event.clientY - rect.top
+      );
+  var distStart = mouse.dist(this.startCtrlPoint);
+  var distEnd = mouse.dist(this.endCtrlPoint);
+  console.log(distStart);
+  console.log(distEnd);
+  if (distStart <= mouseThreshold || distEnd <= mouseThreshold) {
+    if (distStart < distEnd) {
+      this.startCtrlPressed = true;
+      console.log("start selected");
+    } else {
+      this.endCtrlPressed = true;
+    }
+  }
 }
 
 Bezier.prototype.mouseMove = function(event) {
-  var rect = event.data.canvas.getBoundingClientRect();
-  return new Vector(
-    event.clientX - rect.left,
-    event.clientY - rect.top
-  );
+  if (this.startCtrlPressed || this.endCtrlPressed) {
+    var rect = event.data.canvas.getBoundingClientRect();
+    var mouse = new Vector(
+      event.clientX - rect.left,
+      event.clientY - rect.top
+    );
+    if (this.startCtrlPressed) {
+      this.startCtrlPoint = mouse;
+      return true;
+    } else {
+      this.endCtrlPoint = mouse;
+      return true;
+    }
+  }
+  return false;
 }
