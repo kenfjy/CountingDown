@@ -1,36 +1,59 @@
 "use strict";
 
+var countTime = 3.00;
+var beginTime;
+var currentTime;
+var cv, ctx;
 var origin, canvas;
+var timeline;
+var scp_x = 1.0; var scp_y = 0.15;
+var ecp_x = 0.8; var ecp_y = 0.9;
 
 $(function() {
-  origin = new Vector(40, 40);
-  canvas = new Vector(400, 400);
-
-  $("body").onload = setup(canvas);
+  $("body").onload = setup();
   $("canvas").onload = draw();
 })
 
 function setup() {
-  var c = $("canvas");
+  origin = new Vector(40, 40);
+  canvas = new Vector(500, 500);
+
+  var c = $("#canvas");
   c.attr("width", canvas.x);
   c.attr("height", canvas.y);
-  canvas.dump();
+
+  var startPoint = new Vector(0,0);
+  var endPoint = new Vector(canvas.x,canvas.y);
+  var startCtrlPoint = new Vector(canvas.x*scp_x,canvas.y*scp_y);
+  var endCtrlPoint = new Vector(canvas.x*ecp_x,canvas.y*ecp_y);
+  timeline = new Bezier(canvas, startPoint, startCtrlPoint, endCtrlPoint, endPoint);
+
 }
 
 function draw() {
-  var canvas = document.getElementById("canvas");
-  if (canvas.getContext) {
-    var ctx = canvas.getContext("2d");
+  cv = document.getElementById("canvas");
+  if (cv.getContext) {
+    ctx = cv.getContext("2d");
 
-    ctx.fillStyle = "rgb(200,0,0)";
-    ctx.fillRect (10, 10, 55, 50);
+    timeline.drawGrid(ctx);
+    timeline.draw(ctx);
+    timeline.drawCtrl(ctx);
 
-    ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-    ctx.fillRect (30, 30, 55, 50);
+    var h = timeline.getPoint(0.5);
+    var w = timeline.getX(50);
+    ctx.save();
+    ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
+    ctx.beginPath();
+    ctx.arc(h.x, h.y, 5, 0, 2 * Math.PI, false);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w.x, w.y, 5, 0, 2 * Math.PI, false);
+    ctx.fill();
+    ctx.restore();
 
-    var curve = new Bezier(100,25 , 10,90 , 110,100 , 150,195); 
-    ctx.drawSkeleton(curve); 
-    ctx.drawCurve(curve); 
+    $("#canvas").mouseup(timeline.mouseUp)
+      .mousemove({canvas : cv}, timeline.mouseMove)
+      .mousedown(timeline.mouseDown);
   }
 }
 
