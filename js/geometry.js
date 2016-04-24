@@ -13,7 +13,10 @@ Vector.prototype.dist = function(other) {
   return Math.sqrt(Math.pow(this.x-other.x,2) + Math.pow(this.y-other.y,2));
 }
 Vector.prototype.dump = function() {
-  console.log("x: " + this.x + ", y: " + this.y);
+  console.log(
+    x : this.x,
+    y : this.y
+  );
 };
 
 /* 
@@ -130,8 +133,17 @@ Bezier.prototype.getPoint = function(t) {
   }
 }
 
-Bezier.prototype.dump = function() {
-  console.log(this.startPoint.x);
+Bezier.prototype.dumpCtrl = function() {
+  var scp_x = this.startCtrlPoint.x / this.width;
+  var scp_y = this.startCtrlPoint.y / this.height;
+  var ecp_x = this.endCtrlPoint.x / this.width;
+  var exp_y = this.endCtrlPoint.y / this.height;
+  console.log({
+    scp_x : scp_x,
+    scp_y : scp_y,
+    ecp_x : ecp_x,
+    ecp_y : ecp_y
+    });
 }
 
 /*
@@ -143,19 +155,12 @@ Bezier.prototype.mouseUp = function(event) {
 }
 
 Bezier.prototype.mouseDown = function(event) {
-  var rect = event.data.canvas.getBoundingClientRect();
-  var mouse = new Vector(
-      event.clientX - rect.left,
-      event.clientY - rect.top
-      );
+  var mouse = getMouse(event);
   var distStart = mouse.dist(this.startCtrlPoint);
   var distEnd = mouse.dist(this.endCtrlPoint);
-  console.log(distStart);
-  console.log(distEnd);
   if (distStart <= mouseThreshold || distEnd <= mouseThreshold) {
     if (distStart < distEnd) {
       this.startCtrlPressed = true;
-      console.log("start selected");
     } else {
       this.endCtrlPressed = true;
     }
@@ -164,18 +169,19 @@ Bezier.prototype.mouseDown = function(event) {
 
 Bezier.prototype.mouseMove = function(event) {
   if (this.startCtrlPressed || this.endCtrlPressed) {
-    var rect = event.data.canvas.getBoundingClientRect();
-    var mouse = new Vector(
-      event.clientX - rect.left,
-      event.clientY - rect.top
-    );
+    var mouse = getMouse(event);
     if (this.startCtrlPressed) {
       this.startCtrlPoint = mouse;
-      return true;
     } else {
       this.endCtrlPoint = mouse;
-      return true;
     }
   }
-  return false;
+}
+
+function getMouse(event) {
+  var rect = event.data.canvas.getBoundingClientRect();
+  return new Vector(
+      event.clientX - rect.left,
+      event.clientY - rect.top
+      );
 }

@@ -3,7 +3,7 @@
 var countTime = 3.00;
 var beginTime;
 var currentTime;
-var cv, ctx;
+var ctx;
 var origin, canvas;
 var timeline;
 var scp_x = 1.0; var scp_y = 0.15;
@@ -31,7 +31,7 @@ function setup() {
 }
 
 function draw() {
-  cv = document.getElementById("canvas");
+  var cv = document.getElementById("canvas");
 
   $("#canvas")
     .mousedown({canvas : cv}, mouseDown)
@@ -41,11 +41,13 @@ function draw() {
   if (cv.getContext) {
     ctx = cv.getContext("2d");
 
-    loop(ctx);
+    setInterval(loop, 100);
   }
 }
 
-function loop(ctx) {
+function loop() {
+  ctx.clearRect(0,0,canvas.x,canvas.y);
+
   timeline.drawGrid(ctx);
   timeline.draw(ctx);
   timeline.drawCtrl(ctx);
@@ -68,10 +70,8 @@ function mouseDown(event) {
 }
 function mouseUp(event) {
   timeline.mouseUp(event);
+  timeline.dumpCtrl();
 }
 function mouseMove(event) {
-  if (timeline.mouseMove(event)) {
-    console.log("refresh");
-  }
+  timeline.mouseMove(event);
 }
-
