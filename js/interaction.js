@@ -4,6 +4,7 @@ function mouseDown(event) {
 function mouseUp(event) {
   timeline.mouseUp(event);
   timeline.dumpCtrl();
+  calc();
 }
 function mouseMove(event) {
   timeline.mouseMove(event);
@@ -22,11 +23,22 @@ function keyDown(event) {
       flag.timeline = !flag.timeline;
     }
     console.log(key);
-  } else if (event.which === 63) {
-    /* ? */
-    dispHelp();
   } else {
-    console.log("undefined key : " + event.which);
+    switch(event.which) {
+      /* 63 : ? */
+      case 63:
+        dispHelp();
+        break;
+      /* 43 : + */
+      case 43:
+        break;
+      /* 45 : - */
+      case 45:
+        break;
+      default:
+        console.log("undefined key : " + event.which);
+
+    }
   }
 }
 

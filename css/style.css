@@ -11,10 +11,15 @@ body {
   position: relative;
 }
 
+canvas {
+  border: 3px solid rgb(100, 100, 100);
+}
+
 #help {
   width: 200px;
   font-size: 0.8rem;
-  border: 3px solid black;
+  border: 2px solid rgb(180, 180, 180);
+  background-color: white;
   position: absolute;
   float: right;
   right: 30px;
