@@ -26,7 +26,7 @@ $(function() {
 
 function setup() {
   origin = new Vector(40, 40);
-  canvas = new Vector(500, 500);
+  canvas = new Vector($("body").width()-80, $("body").height()-80);
 
   var c = $("#canvas");
   c.attr("width", canvas.x);

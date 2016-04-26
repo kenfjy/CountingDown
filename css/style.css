@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul, li {
+  list-style: none;
+}
+body {
+  height: 100%;
+  min-height: 500px;
+  position: relative;
+}
+
+#help {
+  width: 200px;
+  font-size: 0.8rem;
+  border: 3px solid black;
+  position: absolute;
+  float: right;
+  right: 30px;
+  bottom: 30px;
+}
+#help ul {
+  margin: 1rem;
+}
+#help li {
+  margin: 0.5rem 0;
+}
+
