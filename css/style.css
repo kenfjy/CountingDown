@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family:"DINOT", YuGothic,"游ゴシック体","Yu Gothic", sans-serif;
 }
 ul, li {
   list-style: none;
@@ -15,10 +16,30 @@ canvas {
   border: 3px solid rgb(100, 100, 100);
 }
 
+#counter {
+  position: absolute;
+  float: left;
+  left: 50%;
+  top: 50%;
+  height: 200px;
+  width: 400px;
+  margin-top: -100px;
+  margin-left: -200px;
+  display: table;
+}
+#counter p {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 10.0rem;
+  font-weight: bold;
+  letter-spacing: 0.5rem;
+}
+
 #help {
   width: 200px;
   font-size: 0.8rem;
-  border: 2px solid rgb(180, 180, 180);
+  border: 3px solid rgb(130, 130, 130);
   background-color: white;
   position: absolute;
   float: right;

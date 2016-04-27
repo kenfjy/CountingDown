@@ -1,8 +1,8 @@
 "use strict";
 
-var countTime = 50;
-var beginTime;
-var currentTime;
+var countTime = 30;
+var endTime = 0;
+var currentTime = 0;
 
 /* canvas */
 var ctx;
@@ -13,12 +13,17 @@ var origin, canvas;
 var timeline;
 var scp_x = 0.4; var scp_y = 0.2;
 var ecp_x = 0.5; var ecp_y = 0.8;
-var timeFlag;
+var timeFlag, timePoint;
 
 /* flags */
 var flag = {
+  play : false,
+  reverse : true,
   grid : true,
-  timeline : true
+  points : false,
+  canvas : true,
+  help : false,
+  counter : true
 }
 
 $(function() {
@@ -47,6 +52,11 @@ function setup() {
   timeline = new Timeline(canvas, startPoint, startCtrlPoint, endCtrlPoint, endPoint);
 
   calc();
+
+  /* init views accordingly to flags */
+  dispTime();
+  dispHelp();
+  dispCanvas();
 }
 
 function draw() {
@@ -67,43 +77,68 @@ function draw() {
 }
 
 function loop() {
-  ctx.clearRect(0,0,canvas.x,canvas.y);
-
-  if (flag.grid) {
-    timeline.drawGrid(ctx, countTime);
-  }
-  if (flag.timeline) {
+  if (flag.canvas) {
+    ctx.clearRect(0,0,canvas.x,canvas.y);
+    if (flag.grid) {
+      timeline.drawGrid(ctx, countTime);
+    }
+    if (flag.points) {
+      ctx.save();
+      ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
+      for (var i=0; i<=countTime; i++) {
+        ctx.beginPath();
+        ctx.arc(timePoint[i].x, timePoint[i].y, 5, 0, 2 * Math.PI, false);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
     timeline.drawCtrl(ctx);
     timeline.draw(ctx);
+    //timeline.drawPt(ctx, canvas.y*currentTime/countTime);
   }
 
-  ctx.save();
-  ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
-  for (var i=0; i<=countTime; i++) {
-    ctx.beginPath();
-    ctx.arc(timeFlag[i].x, timeFlag[i].y, 5, 0, 2 * Math.PI, false);
-    ctx.fill();
+  if (flag.play) {
+    var timeNow = new Date().getTime();
+    var ellapsedTime = countTime * 1000 - (endTime - timeNow);
+    /*
+    if (flag.canvas) {
+      timeline.drawPt(ctx, canvas.y*ellapsedTime/1000/countTime);
+    }
+    */
+    if (timeFlag[currentTime+1] <= ellapsedTime) {
+      currentTime++;
+      if (currentTime == countTime) {
+        console.log("stop");
+        flag.play = false;
+      }
+    }
   }
-  ctx.restore();
+
+  if (!flag.reverse) {
+    setTime(currentTime);
+  } else {
+    setTime(countTime - currentTime);
+  }
+
+}
+
+function setTime(time) {
+  var min = "0" + Math.floor(time/60);
+  var sec = "0" + time%60;
+  $("#counter_min").text(min.slice(-2));
+  $("#counter_sec").text(sec.slice(-2));
 }
 
 function calc() {
-  timeFlag = new Object();
+  timeFlag = new Array();
   var x_step = canvas.y/countTime;
   for (var i=0; i<=countTime; i++) {
-    timeFlag[i] = timeline.getX(x_step*i);
+    timeFlag[i] = countTime * 1000 * timeline.getX(x_step*i).x / timeline.width;
   }
-  /*
-  var h = timeline.getPoint(0.5);
-  var w = timeline.getX(50);
-  ctx.save();
-  ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
-  ctx.beginPath();
-  ctx.arc(h.x, h.y, 5, 0, 2 * Math.PI, false);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(w.x, w.y, 5, 0, 2 * Math.PI, false);
-  ctx.fill();
-  ctx.restore();
-  */
+
+  timePoint = new Object();
+  for (var i=0; i<=countTime; i++) {
+    timePoint[i] = timeline.getX(x_step*i);
+  }
+  
 }

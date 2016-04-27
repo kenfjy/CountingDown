@@ -1,4 +1,4 @@
-var calcThreshold = 0.0001;
+var calcThreshold = 0.00005;
 var mouseThreshold = 30;
 
 /* 
@@ -61,11 +61,11 @@ function Bezier(c1, c2, c3, c4) {
 
   this.getX = function(ypos, height) {
     var rel_y = ypos / height;
-    if (rel_y === 0 || rel_y === 1) {
-      if (rel_y === 0) {
-        return this.startPoint;
-      } else {
+    if (rel_y <= 0 || rel_y >= 1) {
+      if (rel_y <= 0) {
         return this.endPoint;
+      } else {
+        return this.startPoint;
       }
     } else {
       var range = [0, rel_y, 1];
@@ -124,7 +124,10 @@ function Timeline(c, c1, c2, c3, c4) {
   }
 
   this.drawGrid = function(ctx, res) {
-    var gridNum = res | 10;
+    var gridNum = res;
+    if (gridNum >= 100) {
+      gridNum = 100;
+    }
     ctx.strokeStyle = "rgba(200, 1.0)";
     ctx.lineWidth = 0.3;
     var widthStep = this.width/gridNum;
@@ -139,6 +142,16 @@ function Timeline(c, c1, c2, c3, c4) {
       ctx.lineTo(this.width, heightStep*i);
       ctx.stroke();
     }
+  }
+
+  this.drawPt = function(ctx, ypos) {
+    ctx.save();
+    ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
+    var pt = this.getX(ypos);
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 5, 0, 2 * Math.PI, false);
+    ctx.fill();
+    ctx.restore();
   }
 
   this.drawCtrl = function(ctx) {
