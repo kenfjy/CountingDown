@@ -17,7 +17,7 @@ function Vector(t_x, t_y){
       y : this.y
     });
   };
-}
+} // vector
 
 /* 
  * BEZIER
@@ -100,7 +100,7 @@ function Bezier(c1, c2, c3, c4) {
       }
     }
   }
-}
+} // bezier
 
 function Timeline(c, c1, c2, c3, c4) {
   this.width = c.x; this.height = c.y;
@@ -144,10 +144,11 @@ function Timeline(c, c1, c2, c3, c4) {
     }
   }
 
-  this.drawPt = function(ctx, ypos) {
+  this.drawPt = function(ctx, time) {
+    console.log(time);
     ctx.save();
     ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
-    var pt = this.getX(ypos);
+    var pt = this.bezier.getX(this.height * time, this.height);
     ctx.beginPath();
     ctx.arc(pt.x, pt.y, 5, 0, 2 * Math.PI, false);
     ctx.fill();
@@ -216,7 +217,7 @@ function Timeline(c, c1, c2, c3, c4) {
     }
   }
 
-}
+} // timeline
 
 function getMouse(event) {
   var rect = event.data.canvas.getBoundingClientRect();

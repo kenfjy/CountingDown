@@ -20,7 +20,7 @@ var flag = {
   play : false,
   reverse : true,
   grid : true,
-  points : false,
+  points : true,
   canvas : true,
   help : false,
   counter : true
@@ -84,11 +84,17 @@ function loop() {
     }
     if (flag.points) {
       ctx.save();
-      ctx.fillStyle = "rgba(100, 90, 110, 1.0)";
+      ctx.fillStyle = "rgba(100, 90, 110, 0.5)";
       for (var i=0; i<=countTime; i++) {
         ctx.beginPath();
         ctx.arc(timePoint[i].x, timePoint[i].y, 5, 0, 2 * Math.PI, false);
         ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(timeFlag[i]/1000*canvas.x/countTime, 10, 5, 0, 2 * Math.PI, false);
+        ctx.fill();
+        timeline.drawPt(ctx, timeFlag[i]/1000/countTime);
+
       }
       ctx.restore();
     }
@@ -100,11 +106,8 @@ function loop() {
   if (flag.play) {
     var timeNow = new Date().getTime();
     var ellapsedTime = countTime * 1000 - (endTime - timeNow);
-    /*
-    if (flag.canvas) {
-      timeline.drawPt(ctx, canvas.y*ellapsedTime/1000/countTime);
-    }
-    */
+    timeline.drawPt(ctx, ellapsedTime/1000/countTime);
+
     if (timeFlag[currentTime+1] <= ellapsedTime) {
       currentTime++;
       if (currentTime == countTime) {
@@ -112,7 +115,11 @@ function loop() {
         flag.play = false;
       }
     }
+  } else {
+    timeline.drawPt(ctx, timeFlag[currentTime]/1000/countTime);
+    //console.log(timeFlag[currentTime]);
   }
+
 
   if (!flag.reverse) {
     setTime(currentTime);
@@ -131,14 +138,14 @@ function setTime(time) {
 
 function calc() {
   timeFlag = new Array();
-  var x_step = canvas.y/countTime;
+  var y_step = canvas.y/countTime;
   for (var i=0; i<=countTime; i++) {
-    timeFlag[i] = countTime * 1000 * timeline.getX(x_step*i).x / timeline.width;
+    timeFlag[i] = countTime * 1000 * timeline.getX(y_step*i).x / timeline.width;
   }
 
   timePoint = new Object();
   for (var i=0; i<=countTime; i++) {
-    timePoint[i] = timeline.getX(x_step*i);
+    timePoint[i] = timeline.getX(y_step*i);
   }
   
 }
