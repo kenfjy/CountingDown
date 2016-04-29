@@ -20,11 +20,11 @@ var flag = {
   play : false,
   reverse : true,
   timeline : true,
-  grid : true,
+  grid : false,
   points : false,
   canvas : true,
   help : false,
-  counter : true
+  counter : false
 }
 
 $(function() {
@@ -78,13 +78,13 @@ function draw() {
 }
 
 function loop() {
-  ctx.clearRect(0,0,canvas.x,canvas.y);
+  /* Time calculation */
+  var tp = false;
 
   if (flag.play) {
     var timeNow = new Date().getTime();
     var ellapsedTime = countTime*1000 - (endTime - timeNow);
     if (timeFlag[currentTime+1] <= ellapsedTime) {
-      console.log(timeFlag[currentTime+1].x + " | " + ellapsedTime);
       currentTime++;
       if (currentTime == countTime) {
         console.log("stop");
@@ -93,33 +93,40 @@ function loop() {
       }
     }
 
-    var tp = timeline.bezier.getY(timeline.width*ellapsedTime/1000/countTime, timeline.width);
-    if (flag.timeline) {
-      timeline.drawCurrent(ctx, tp)
+    tp = timeline.bezier.getY(timeline.width*ellapsedTime/1000/countTime, timeline.width);
+  } else {
+    if (currentTime > 0) {
+      tp = timeline.bezier.getY(timeline.width*timeFlag[currentTime]/1000/countTime, timeline.width);
     }
+  }
 
+  /* Display time */
+  if (!flag.reverse) {
+    setTime(currentTime);
+  } else {
+    setTime(countTime - currentTime);
+  }
+
+  /* Start canvas */
+  ctx.clearRect(0,0,canvas.x,canvas.y);
+
+  /* Draw background */
+  if (flag.canvas && tp != false) {
     ctx.save();
     ctx.fillStyle = "rgba(80, 90, 200, 0.5)";
     ctx.beginPath();
     ctx.rect(0, tp.y, canvas.x, canvas.y);
     ctx.fill();
     ctx.restore();
-  } else {
-    if (currentTime > 0) {
-      var tp = timeline.bezier.getY(timeline.width*timeFlag[currentTime]/1000/countTime, timeline.width);
-      if (flag.timeline) {
-        timeline.drawCurrent(ctx, tp)
-      }
-    }
   }
 
   if (flag.canvas) {
     if (flag.grid) {
       timeline.drawGridX(ctx, countTime);
       ctx.save();
-      var countUp = countTime;
-      if (countUp >= 50) {
-        countUp = 50;
+      var countUp = 1;
+      if (countTime >= 100) {
+        countUp = 10;
       }
       for (var i=0; i<=countTime; i+=countUp) {
         /* grid lines */
@@ -132,6 +139,12 @@ function loop() {
       }
       ctx.restore();
     }
+
+    if (flag.timeline) {
+      timeline.drawCtrl(ctx);
+      timeline.draw(ctx);
+    }
+
     if (flag.points) {
       ctx.save();
       ctx.fillStyle = "rgba(100, 90, 110, 0.5)";
@@ -145,17 +158,11 @@ function loop() {
     }
 
     if (flag.timeline) {
-      timeline.drawCtrl(ctx);
-      timeline.draw(ctx);
+      timeline.drawCurrent(ctx, tp)
     }
   }
 
 
-  if (!flag.reverse) {
-    setTime(currentTime);
-  } else {
-    setTime(countTime - currentTime);
-  }
 
 }
 
