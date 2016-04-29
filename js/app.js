@@ -19,8 +19,9 @@ var timeFlag, timePoint;
 var flag = {
   play : false,
   reverse : true,
+  timeline : true,
   grid : true,
-  points : true,
+  points : false,
   canvas : true,
   help : false,
   counter : true
@@ -86,8 +87,8 @@ function loop() {
         /* grid lines */
         if (i != 0 && i != countTime) {
           ctx.beginPath();
-          ctx.moveTo(timeFlag[i]/1000/countTime*canvas.x, 0);
-          ctx.lineTo(timeFlag[i]/1000/countTime*canvas.x, canvas.y);
+          ctx.moveTo(timeFlag[i]/1000/countTime*timeline.width, 0);
+          ctx.lineTo(timeFlag[i]/1000/countTime*timeline.width, timeline.height);
           ctx.stroke();
         }
       }
@@ -105,8 +106,10 @@ function loop() {
       ctx.restore();
     }
 
-    timeline.drawCtrl(ctx);
-    timeline.draw(ctx);
+    if (flag.timeline) {
+      timeline.drawCtrl(ctx);
+      timeline.draw(ctx);
+    }
   }
 
   if (flag.play) {
@@ -122,10 +125,23 @@ function loop() {
       }
     }
 
-    timeline.drawCurrent(ctx, ellapsedTime/1000/countTime)
+    var tp = timeline.bezier.getY(timeline.width*ellapsedTime/1000/countTime, timeline.width);
+    if (flag.timeline) {
+      timeline.drawCurrent(ctx, tp)
+    }
+
+    ctx.save();
+    ctx.fillStyle = "rgba(80, 90, 200, 0.5)";
+    ctx.beginPath();
+    ctx.rect(0, tp.y, canvas.x, canvas.y);
+    ctx.fill();
+    ctx.restore();
   } else {
     if (currentTime > 0) {
-      timeline.drawCurrent(ctx, timeFlag[currentTime]/1000/countTime)
+      var tp = timeline.bezier.getY(timeline.width*timeFlag[currentTime]/1000/countTime, timeline.width);
+      if (flag.timeline) {
+        timeline.drawCurrent(ctx, tp)
+      }
     }
   }
 
@@ -146,15 +162,15 @@ function setTime(time) {
 }
 
 function calc() {
-  var y_step = canvas.y/countTime;
+  var y_step = timeline.height/countTime;
 
   timePoint = new Object();
   for (var i=0; i<=countTime; i++) {
-    timePoint[i] = timeline.bezier.getX(canvas.y - y_step*i, canvas.y);
+    timePoint[i] = timeline.bezier.getX(timeline.height - y_step*i, timeline.height);
   }
-  
+
   timeFlag = new Array();
   for (var i=0; i<=countTime; i++) {
-    timeFlag[i] = timePoint[i].x * (countTime * 1000) / canvas.x;
+    timeFlag[i] = timePoint[i].x * (countTime * 1000) / timeline.width;
   }
 }

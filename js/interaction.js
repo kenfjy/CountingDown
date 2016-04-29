@@ -25,6 +25,11 @@ function keyDown(event) {
     } else if (key === 't') {
       flag.counter = !flag.counter;
       dispTime();
+    } else if (key === 'T') {
+      flag.timeline = !flag.timeline;
+    } else if (key === 'R') {
+      flag.play = !flag.play;
+      currentTime = 0;
     } else if (key === 'r') {
       flag.reverse = !flag.reverse;
     } else if (key === 'p') {

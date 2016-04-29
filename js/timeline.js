@@ -56,19 +56,18 @@ function Timeline(c, c1, c2, c3, c4) {
     }
   }
 
-  this.drawCurrent = function(ctx, time) {
+  this.drawCurrent = function(ctx, tp) {
     ctx.save();
     ctx.strokeStyle = "rgba(100, 200, 110, 1.0)";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(this.width*time, 0);
-    ctx.lineTo(this.width*time, this.height);
+    ctx.moveTo(tp.x, 0);
+    ctx.lineTo(tp.x, this.height);
     ctx.stroke();
     ctx.restore();
 
     ctx.save();
     ctx.fillStyle = "rgba(100, 200, 110, 1.0)";
-    var tp = this.bezier.getY(this.width*time, this.width);
     ctx.beginPath();
     ctx.arc(tp.x, tp.y, 5, 0, 2 * Math.PI, false);
     ctx.fill();
