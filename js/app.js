@@ -1,6 +1,6 @@
 "use strict";
 
-var countTime = 10;
+var countTime = 600;
 var endTime = 0;
 var currentTime = 0;
 
@@ -78,39 +78,7 @@ function draw() {
 }
 
 function loop() {
-  if (flag.canvas) {
-    ctx.clearRect(0,0,canvas.x,canvas.y);
-    if (flag.grid) {
-      timeline.drawGridX(ctx, countTime);
-      ctx.save();
-      for (var i=0; i<=countTime; i++) {
-        /* grid lines */
-        if (i != 0 && i != countTime) {
-          ctx.beginPath();
-          ctx.moveTo(timeFlag[i]/1000/countTime*timeline.width, 0);
-          ctx.lineTo(timeFlag[i]/1000/countTime*timeline.width, timeline.height);
-          ctx.stroke();
-        }
-      }
-      ctx.restore();
-    }
-    if (flag.points) {
-      ctx.save();
-      ctx.fillStyle = "rgba(100, 90, 110, 0.5)";
-      for (var i=0; i<=countTime; i++) {
-        /* time points */
-        ctx.beginPath();
-        ctx.arc(timePoint[i].x, timePoint[i].y, 5, 0, 2 * Math.PI, false);
-        ctx.fill();
-      }
-      ctx.restore();
-    }
-
-    if (flag.timeline) {
-      timeline.drawCtrl(ctx);
-      timeline.draw(ctx);
-    }
-  }
+  ctx.clearRect(0,0,canvas.x,canvas.y);
 
   if (flag.play) {
     var timeNow = new Date().getTime();
@@ -142,6 +110,43 @@ function loop() {
       if (flag.timeline) {
         timeline.drawCurrent(ctx, tp)
       }
+    }
+  }
+
+  if (flag.canvas) {
+    if (flag.grid) {
+      timeline.drawGridX(ctx, countTime);
+      ctx.save();
+      var countUp = countTime;
+      if (countUp >= 50) {
+        countUp = 50;
+      }
+      for (var i=0; i<=countTime; i+=countUp) {
+        /* grid lines */
+        if (i != 0 && i != countTime) {
+          ctx.beginPath();
+          ctx.moveTo(timeFlag[i]/1000/countTime*timeline.width, 0);
+          ctx.lineTo(timeFlag[i]/1000/countTime*timeline.width, timeline.height);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
+    if (flag.points) {
+      ctx.save();
+      ctx.fillStyle = "rgba(100, 90, 110, 0.5)";
+      for (var i=0; i<=countTime; i++) {
+        /* time points */
+        ctx.beginPath();
+        ctx.arc(timePoint[i].x, timePoint[i].y, 5, 0, 2 * Math.PI, false);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    if (flag.timeline) {
+      timeline.drawCtrl(ctx);
+      timeline.draw(ctx);
     }
   }
 

@@ -42,8 +42,8 @@ function Timeline(c, c1, c2, c3, c4) {
 
   this.drawGridX = function(ctx, res) {
     var gridNum = res;
-    if (gridNum >= 100) {
-      gridNum = 100;
+    if (gridNum >= 50) {
+      gridNum = 50;
     }
     ctx.strokeStyle = "rgba(200, 1.0)";
     ctx.lineWidth = 0.3;
