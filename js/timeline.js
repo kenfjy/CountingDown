@@ -88,12 +88,13 @@ function Timeline(c, c1, c2, c3, c4) {
   }
 
   this.dumpCtrl = function() {
-    console.log({
-      scp_x : this.bezier.startCtrlPoint.x / this.width,
-      scp_y : this.bezier.startCtrlPoint.y / this.height,
-      ecp_x : this.bezier.endCtrlPoint.x / this.width,
-      ecp_y : this.bezier.endCtrlPoint.y / this.height
-    });
+    console.log(
+      "var "
+      + "scp_x = " + this.bezier.startCtrlPoint.x / this.width + ", "
+      + "scp_y = " + (this.height - this.bezier.startCtrlPoint.y) / this.height + ", "
+      + "ecp_x = " + this.bezier.endCtrlPoint.x / this.width + ", "
+      + "ecp_y = " + (this.height - this.bezier.endCtrlPoint.y) / this.height + ";"
+    );
   }
 
   /*
