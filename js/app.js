@@ -1,6 +1,6 @@
 "use strict";
 
-var countTime = 30;
+var countTime = 10;
 var endTime = 0;
 var currentTime = 0;
 
@@ -80,44 +80,53 @@ function loop() {
   if (flag.canvas) {
     ctx.clearRect(0,0,canvas.x,canvas.y);
     if (flag.grid) {
-      timeline.drawGrid(ctx, countTime);
+      timeline.drawGridX(ctx, countTime);
+      ctx.save();
+      for (var i=0; i<=countTime; i++) {
+        /* grid lines */
+        if (i != 0 && i != countTime) {
+          ctx.beginPath();
+          ctx.moveTo(timeFlag[i]/1000/countTime*canvas.x, 0);
+          ctx.lineTo(timeFlag[i]/1000/countTime*canvas.x, canvas.y);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
     }
     if (flag.points) {
       ctx.save();
       ctx.fillStyle = "rgba(100, 90, 110, 0.5)";
       for (var i=0; i<=countTime; i++) {
+        /* time points */
         ctx.beginPath();
         ctx.arc(timePoint[i].x, timePoint[i].y, 5, 0, 2 * Math.PI, false);
         ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(timeFlag[i]/1000*canvas.x/countTime, 10, 5, 0, 2 * Math.PI, false);
-        ctx.fill();
-        timeline.drawPt(ctx, timeFlag[i]/1000/countTime);
-
       }
       ctx.restore();
     }
+
     timeline.drawCtrl(ctx);
     timeline.draw(ctx);
-    //timeline.drawPt(ctx, canvas.y*currentTime/countTime);
   }
 
   if (flag.play) {
     var timeNow = new Date().getTime();
-    var ellapsedTime = countTime * 1000 - (endTime - timeNow);
-    timeline.drawPt(ctx, ellapsedTime/1000/countTime);
-
+    var ellapsedTime = countTime*1000 - (endTime - timeNow);
     if (timeFlag[currentTime+1] <= ellapsedTime) {
+      console.log(timeFlag[currentTime+1].x + " | " + ellapsedTime);
       currentTime++;
       if (currentTime == countTime) {
         console.log("stop");
         flag.play = false;
+        currentTime = 0;
       }
     }
+
+    timeline.drawCurrent(ctx, ellapsedTime/1000/countTime)
   } else {
-    timeline.drawPt(ctx, timeFlag[currentTime]/1000/countTime);
-    //console.log(timeFlag[currentTime]);
+    if (currentTime > 0) {
+      timeline.drawCurrent(ctx, timeFlag[currentTime]/1000/countTime)
+    }
   }
 
 
@@ -137,15 +146,15 @@ function setTime(time) {
 }
 
 function calc() {
-  timeFlag = new Array();
   var y_step = canvas.y/countTime;
-  for (var i=0; i<=countTime; i++) {
-    timeFlag[i] = countTime * 1000 * timeline.getX(y_step*i).x / timeline.width;
-  }
 
   timePoint = new Object();
   for (var i=0; i<=countTime; i++) {
-    timePoint[i] = timeline.getX(y_step*i);
+    timePoint[i] = timeline.bezier.getX(canvas.y - y_step*i, canvas.y);
   }
   
+  timeFlag = new Array();
+  for (var i=0; i<=countTime; i++) {
+    timeFlag[i] = timePoint[i].x * (countTime * 1000) / canvas.x;
+  }
 }

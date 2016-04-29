@@ -27,6 +27,8 @@ function keyDown(event) {
       dispTime();
     } else if (key === 'r') {
       flag.reverse = !flag.reverse;
+    } else if (key === 'p') {
+      flag.points = !flag.points;
     }
     console.log(key);
   } else {
