@@ -6,6 +6,9 @@
 ul, li {
   list-style: none;
 }
+html {
+  font-size: 16px;
+}
 body {
   height: 100%;
   min-height: 500px;
@@ -14,6 +17,11 @@ body {
 
 canvas {
   border: 3px solid rgb(100, 100, 100);
+  margin: auto;
+  display: block;
+}
+#canvas_wrapper {
+  width: 100%;
 }
 
 #counter {

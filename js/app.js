@@ -6,7 +6,7 @@ var currentTime = 0;
 
 /* canvas */
 var ctx;
-var offset = 40;
+var offset = 25;
 
 /* timeline */
 var origin, canvas;
@@ -32,7 +32,7 @@ $(function() {
 })
 
 function setup() {
-  var t_width = Math.floor(($(window).width()-offset*2)/500)*500;
+  var t_width = Math.floor(($(window).width()-offset*2)/100)*100;
   var t_height = Math.floor(($(window).height()-offset*2)/100)*100;
   canvas = new Vector(t_width, t_height);
 
@@ -42,8 +42,10 @@ function setup() {
   var c = $("#canvas");
   c.attr("width", canvas.x);
   c.attr("height", canvas.y);
-  c.css("margin-top", origin.y);
-  c.css("margin-left", origin.x);
+  c.css("margin-top", ($(window).height()-canvas.y)/2);
+  if (canvas.x <= 300) {
+    $("html").css("font-size", "10px");
+  }
 
   var startPoint = new Vector(0,0);
   var endPoint = new Vector(canvas.x,canvas.y);
@@ -109,14 +111,10 @@ function loop() {
   /* Start canvas */
   ctx.clearRect(0,0,canvas.x,canvas.y);
 
+
   /* Draw background */
   if (flag.canvas && tp != false) {
-    ctx.save();
-    ctx.fillStyle = "rgba(80, 90, 200, 0.5)";
-    ctx.beginPath();
-    ctx.rect(0, tp.y, canvas.x, canvas.y);
-    ctx.fill();
-    ctx.restore();
+    timeline.drawBackground(ctx, tp);
   }
 
   if (flag.canvas) {

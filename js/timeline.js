@@ -74,6 +74,15 @@ function Timeline(c, c1, c2, c3, c4) {
     ctx.restore();
   }
 
+  this.drawBackground = function(ctx, tp) {
+    ctx.save();
+    ctx.fillStyle = "rgba(80, 90, 200, 0.5)";
+    ctx.beginPath();
+    ctx.rect(0, tp.y, canvas.x, canvas.y);
+    ctx.fill();
+    ctx.restore();
+  }
+
   this.drawCtrl = function(ctx) {
     ctx.save();
     ctx.strokeStyle = "rgba(200, 90, 110, 1.0)";
