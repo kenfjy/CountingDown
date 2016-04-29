@@ -11,8 +11,8 @@ var offset = 40;
 /* timeline */
 var origin, canvas;
 var timeline;
-var scp_x= 0.22, scp_y= 0.796, ecp_x= 0.522, ecp_y= 0.406;
 var timeFlag, timePoint;
+var scp_x = 0.178, scp_y = 0.424, ecp_x = 0.516, ecp_y = 0.85;
 
 /* flags */
 var flag = {
