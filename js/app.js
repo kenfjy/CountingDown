@@ -28,7 +28,7 @@ var flag = {
 }
 
 /* audio */
-var aContext;
+var audioContext;
 var ticBuffer = null;
 
 
@@ -69,7 +69,7 @@ function setup() {
   /* init audiocontext */
   try {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    var aContext = new AudioContext();
+    audioContext = new AudioContext();
     loadSound('./asset/ticking_cut.mp3');
   } catch(e) {
     flag.sound = false;
@@ -205,7 +205,7 @@ function loadSound(url) {
   request.responseType = 'arraybuffer';
 
   request.onload = function() {
-    aContext.decodeAudioData(request.response, function(buffer) {
+    audioContext.decodeAudioData(request.response, function(buffer) {
       ticBuffer = buffer;
     }, onError);
   }
@@ -215,6 +215,6 @@ function loadSound(url) {
 function playSound(buffer) {
   var src = aC.createBufferSource();
   src.buffer = buffer;
-  src.connect(aContext.destination);
+  src.connect(audioContext.destination);
   src.start(0);
 }
