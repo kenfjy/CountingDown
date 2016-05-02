@@ -23,8 +23,13 @@ var flag = {
   points : false,
   canvas : true,
   help : false,
-  counter : false
+  counter : false,
+  sound : true
 }
+
+/* tic toc */
+var ticBuffer = null;
+
 
 $(function() {
   $("body").onload = setup();
@@ -59,6 +64,16 @@ function setup() {
   dispTime();
   dispHelp();
   dispCanvas();
+
+  /* init audiocontext */
+  try {
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    var context = new AudioContext();
+    loadSound('./asset/ticking_cut.mp3');
+  } catch(e) {
+    flag.sound = false;
+    alert('Web Audio API is not supported in this browser');
+  }
 }
 
 function draw() {
@@ -85,12 +100,13 @@ function loop() {
   if (flag.play) {
     var timeNow = new Date().getTime();
     var ellapsedTime = countTime*1000 - (endTime - timeNow);
-    if (timeFlag[currentTime+1] <= ellapsedTime) {
+    while (timeFlag[currentTime+1] <= ellapsedTime) {
       currentTime++;
       if (currentTime == countTime) {
         console.log("stop");
         flag.play = false;
-        currentTime = 0;
+        // currentTime = 0;
+        break;
       }
     }
 
@@ -159,8 +175,6 @@ function loop() {
     }
   }
 
-
-
 }
 
 function setTime(time) {
@@ -182,4 +196,24 @@ function calc() {
   for (var i=0; i<=countTime; i++) {
     timeFlag[i] = timePoint[i].x * (countTime * 1000) / timeline.width;
   }
+}
+
+function loadSound(url) {
+  var request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  request.responseType = 'arraybuffer';
+
+  request.onload = function() {
+    context.decodeAudioData(request.response, function(buffer) {
+      ticBuffer = buffer;
+    }, onError);
+  }
+  request.send();
+}
+
+function playSound(buffer) {
+  var src = context.createBufferSource();
+  src.buffer = buffer;
+  src.connect(context.destination);
+  src.start(0);
 }
