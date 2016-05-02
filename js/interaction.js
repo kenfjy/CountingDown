@@ -32,6 +32,16 @@ function keyDown(event) {
       currentTime = 0;
     } else if (key === 'r') {
       flag.reverse = !flag.reverse;
+    } else if (key === 's') {
+      flag.sound = !flag.sound;
+      if (flag.sound) {
+        try {
+          window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        } catch(e) {
+          flag.sound = false;
+          alert('Web Audio API is not supported in this browser');
+        }
+      }
     } else if (key === 'p') {
       flag.points = !flag.points;
     }

@@ -70,7 +70,7 @@ function setup() {
   try {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContext();
-    loadSound('./asset/ticking_cut.mp3');
+    loadSound('http://kenfjy.github.io/CountingDown/asset/ticking_cut.mp3');
   } catch(e) {
     flag.sound = false;
     alert('Web Audio API is not supported in this browser');
@@ -101,13 +101,20 @@ function loop() {
   if (flag.play) {
     var timeNow = new Date().getTime();
     var ellapsedTime = countTime*1000 - (endTime - timeNow);
-    while (timeFlag[currentTime+1] <= ellapsedTime) {
-      currentTime++;
-      if (currentTime == countTime) {
+    var t_currentTime = currentTime;
+    while (timeFlag[t_currentTime+1] <= ellapsedTime) {
+      t_currentTime++;
+      if (t_currentTime == countTime) {
         console.log("stop");
         flag.play = false;
         // currentTime = 0;
         break;
+      }
+    }
+    if (t_currentTime != currentTime) {
+      currentTime = t_currentTime;
+      if (flag.sound) {
+        playSound(ticBuffer);
       }
     }
 
@@ -213,8 +220,13 @@ function loadSound(url) {
 }
 
 function playSound(buffer) {
-  var src = aC.createBufferSource();
+  var src = audioContext.createBufferSource();
   src.buffer = buffer;
   src.connect(audioContext.destination);
   src.start(0);
+}
+
+function onError(e) {
+  console.log("Error : ");
+  console.log(e);
 }
