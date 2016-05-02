@@ -1,6 +1,6 @@
 "use strict";
 
-var countTime = 600;
+var countTime = 60;
 var endTime = 0;
 var currentTime = 0;
 
@@ -29,7 +29,15 @@ var flag = {
 
 /* audio */
 var audioContext;
-var ticBuffer = null;
+var ticBuffer = null, alarmBuffer = null;
+var ticUrl = 'http://kenfjy.github.io/CountingDown/asset/ticking_cut.mp3';
+var alarmUrl = 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.mp3';
+
+/* 
+ * Music
+ * TIC : http://www.soundjay.com/clock/clock-ticking-2.mp3
+ * ALARM : http://www.soundjay.com/clock/alarm-clock-01.mp3
+ */
 
 
 $(function() {
@@ -70,7 +78,8 @@ function setup() {
   try {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContext();
-    loadSound('http://kenfjy.github.io/CountingDown/asset/ticking_cut.mp3');
+    loadSound(ticUrl, ticBuffer);
+    loadSound(alarmUrl, alarmBuffer);
   } catch(e) {
     flag.sound = false;
     alert('Web Audio API is not supported in this browser');
@@ -107,11 +116,12 @@ function loop() {
       if (t_currentTime == countTime) {
         console.log("stop");
         flag.play = false;
+        playSound(alarmBuffer);
         // currentTime = 0;
         break;
       }
     }
-    if (t_currentTime != currentTime) {
+    if (t_currentTime != currentTime && t_currentTime != countTime) {
       currentTime = t_currentTime;
       if (flag.sound) {
         playSound(ticBuffer);
@@ -206,14 +216,14 @@ function calc() {
   }
 }
 
-function loadSound(url) {
+function loadSound(url, buf) {
   var request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.responseType = 'arraybuffer';
 
   request.onload = function() {
     audioContext.decodeAudioData(request.response, function(buffer) {
-      ticBuffer = buffer;
+      buf = buffer;
     }, onError);
   }
   request.send();
