@@ -30,8 +30,16 @@ var flag = {
 /* audio */
 var audioContext;
 var ticBuffer = null, alarmBuffer = null;
-var ticUrl = 'http://kenfjy.github.io/CountingDown/asset/ticking_cut.mp3';
-var alarmUrl = 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.mp3';
+// var ticUrl = 'http://kenfjy.github.io/CountingDown/asset/ticking_cut.mp3';
+// var alarmUrl = 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.mp3';
+var sounds = {
+  tic : {
+    src : 'http://kenfjy.github.io/CountingDown/asset/ticking_cut2.mp3'
+  },
+  alarm : {
+    src : 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.mp3'
+  }
+};
 
 /* 
  * Music
@@ -78,8 +86,7 @@ function setup() {
   try {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContext();
-    loadSound(ticUrl, ticBuffer);
-    loadSound(alarmUrl, alarmBuffer);
+    loadSounds(sounds);
   } catch(e) {
     flag.sound = false;
     alert('Web Audio API is not supported in this browser');
@@ -116,15 +123,17 @@ function loop() {
       if (t_currentTime == countTime) {
         console.log("stop");
         flag.play = false;
-        playSound(alarmBuffer);
-        // currentTime = 0;
+        if (flag.sound) {
+          playSound(sounds.alarm.buffer);
+        }
+        currentTime = 0;
         break;
       }
     }
     if (t_currentTime != currentTime && t_currentTime != countTime) {
       currentTime = t_currentTime;
       if (flag.sound) {
-        playSound(ticBuffer);
+        playSound(sounds.tic.buffer);
       }
     }
 
@@ -216,19 +225,6 @@ function calc() {
   }
 }
 
-function loadSound(url, buf) {
-  var request = new XMLHttpRequest();
-  request.open('GET', url, true);
-  request.responseType = 'arraybuffer';
-
-  request.onload = function() {
-    audioContext.decodeAudioData(request.response, function(buffer) {
-      buf = buffer;
-    }, onError);
-  }
-  request.send();
-}
-
 function playSound(buffer) {
   var src = audioContext.createBufferSource();
   src.buffer = buffer;
@@ -236,7 +232,29 @@ function playSound(buffer) {
   src.start(0);
 }
 
-function onError(e) {
-  console.log("Error : ");
-  console.log(e);
+function loadSoundObj(obj) {
+  var request = new XMLHttpRequest();
+  request.open('GET', obj.src, true);
+  request.responseType = 'arraybuffer';
+
+  request.onload = function() {
+    audioContext.decodeAudioData(request.response, function(buffer) {
+      obj.buffer = buffer;
+    }, function(err) {
+      throw new Error(err);
+      console.log(err);
+    });
+  }
+
+  request.send();
+}
+
+function loadSounds(obj) {
+  var len = obj.length, i;
+
+  for (i in obj) {
+    if (obj.hasOwnProperty(i)) {
+      loadSoundObj(obj[i]);
+    }
+  }
 }
