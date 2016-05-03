@@ -30,8 +30,6 @@ var flag = {
 /* audio */
 var audioContext;
 var ticBuffer = null, alarmBuffer = null;
-// var ticUrl = 'http://kenfjy.github.io/CountingDown/asset/ticking_cut.mp3';
-// var alarmUrl = 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.mp3';
 var sounds = {
   tic : {
     src : 'http://kenfjy.github.io/CountingDown/asset/ticking_cut.ogg'
@@ -40,9 +38,8 @@ var sounds = {
     src : 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.ogg'
   }
 };
-
 /* 
- * Music
+ * Music Credits
  * TIC : http://www.soundjay.com/clock/clock-ticking-2.mp3
  * ALARM : http://www.soundjay.com/clock/alarm-clock-01.mp3
  */
