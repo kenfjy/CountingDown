@@ -32,10 +32,10 @@ var audioContext;
 var ticBuffer = null, alarmBuffer = null;
 var sounds = {
   tic : {
-    src : 'http://kenfjy.github.io/CountingDown/asset/ticking_cut.ogg'
+    src : 'https://kenfjy.github.io/CountingDown/asset/ticking_cut.ogg'
   },
   alarm : {
-    src : 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.ogg'
+    src : 'https://kenfjy.github.io/CountingDown/asset/alarm_cut.ogg'
   }
 };
 /* 
