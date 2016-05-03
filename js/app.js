@@ -34,10 +34,10 @@ var ticBuffer = null, alarmBuffer = null;
 // var alarmUrl = 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.mp3';
 var sounds = {
   tic : {
-    src : 'http://kenfjy.github.io/CountingDown/asset/ticking_cut2.mp3'
+    src : 'http://kenfjy.github.io/CountingDown/asset/ticking_cut.ogg'
   },
   alarm : {
-    src : 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.mp3'
+    src : 'http://kenfjy.github.io/CountingDown/asset/alarm_cut.ogg'
   }
 };
 
