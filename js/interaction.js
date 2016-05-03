@@ -14,22 +14,28 @@ function keyDown(event) {
   if (event.which === 13) {
     /* RETURN key */
     event.preventDefault();
-  } else if (event.which >= 65 && event.which <= 122) {
+  } else if (event.which >= 65 && event.which <= 90) {
     /* if alphabet */
-    var key = String.fromCharCode(event.which);
+    var key = event.key;
+    console.log("key : " + key);
     if (key === 'g') {
       flag.grid = !flag.grid;
     } else if (key === 'c') {
       flag.canvas = !flag.canvas;
       dispCanvas();
+    } else if (key === 'h') {
+      flag.help = !flag.help;
+      dispHelp();
     } else if (key === 't') {
       flag.counter = !flag.counter;
       dispTime();
+
     } else if (key === 'T') {
       flag.timeline = !flag.timeline;
     } else if (key === 'R') {
-      flag.play = !flag.play;
+      flag.play = false;
       currentTime = 0;
+      endTime = 0;
     } else if (key === 'r') {
       flag.reverse = !flag.reverse;
     } else if (key === 's') {
@@ -45,23 +51,17 @@ function keyDown(event) {
     } else if (key === 'p') {
       flag.points = !flag.points;
     }
-    console.log(key);
   } else {
-    switch(event.which) {
-      /* 63 : ? */
-      case 63:
-        flag.help = !flag.help
-        dispHelp();
+    switch(event.keyCode) {
+      case 38: // UP
+        gainNode.gain.value += 1;
+        console.log("louder : " + gainNode.gain.value);
         break;
-      /* 43 : + */
-      case 43:
-        if (!flag.play) {
-          countTime += 10;
-          calc();
-        }
+      case 40: // DOWN
+        gainNode.gain.value -= 1;
+        console.log("quieter : " + gainNode.gain.value);
         break;
-      /* 45 : - */
-      case 45:
+      case 37: // LEFT
         if (!flag.play) {
           if (countTime > 10) {
             countTime -= 10;
@@ -69,11 +69,15 @@ function keyDown(event) {
           }
         }
         break;
-      /* 32 : [SPACE] */
-      case 32:
+      case 39: // RIGHT
+        if (!flag.play) {
+          countTime += 10;
+          calc();
+        }
+        break;
+      case 32: // [SPACE]
         flag.play = !flag.play;
         if (flag.play) {
-          /* need huge fix */
           if (currentTime == 0) {
             endTime = new Date().getTime()+countTime*1000
           } else {

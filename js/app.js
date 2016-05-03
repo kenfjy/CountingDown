@@ -12,7 +12,6 @@ var offset = 25;
 var origin, canvas;
 var timeline;
 var timeFlag, timePoint;
-var scp_x = 0.178, scp_y = 0.424, ecp_x = 0.516, ecp_y = 0.85;
 
 /* flags */
 var flag = {
@@ -28,7 +27,7 @@ var flag = {
 }
 
 /* audio */
-var audioContext;
+var audioContext, gainNode;
 var ticBuffer = null, alarmBuffer = null;
 var sounds = {
   tic : {
@@ -83,7 +82,9 @@ function setup() {
   try {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContext();
+    gainNode = audioContext.createGain();
     loadSounds(sounds);
+    gainNode.connect(audioContext.destination);
   } catch(e) {
     flag.sound = false;
     alert('Web Audio API is not supported in this browser');
@@ -94,7 +95,8 @@ function draw() {
   var cv = document.getElementById("canvas");
 
   /* event handlers */
-  $("body").keypress(keyDown);
+  // $("body").keypress(keyDown);
+  $("body").keydown(keyDown);
   $("#canvas")
     .mousedown({canvas : cv}, mouseDown)
     .mouseup(mouseUp)
