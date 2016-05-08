@@ -11,12 +11,16 @@ function mouseMove(event) {
 }
 
 function keyDown(event) {
+  console.log(event);
   if (event.which === 13) {
     /* RETURN key */
     event.preventDefault();
   } else if (event.which >= 65 && event.which <= 90) {
     /* if alphabet */
-    var key = event.key;
+    var key = String.fromCharCode(event.which); 
+    if (event.shiftKey == false) {
+      key = key.toLowerCase();
+    }
     console.log("key : " + key);
     if (key === 'g') {
       flag.grid = !flag.grid;
