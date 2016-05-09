@@ -19,7 +19,7 @@ var timeFlag, timePoint;
 var flag = {
   play : false,
   reverse : true,
-  timeline : true,
+  timeline : false,
   grid : false,
   points : false,
   canvas : true,
@@ -90,6 +90,8 @@ function setup() {
     gainNode.connect(audioContext.destination);
     flag.play = true;
     playTimer();
+    var p = timeline.dumpCtrl();
+    $("#params p").text(p);
   } catch(e) {
     flag.sound = false;
     alert('Web Audio API is not supported in this browser');
