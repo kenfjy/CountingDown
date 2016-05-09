@@ -106,6 +106,13 @@ function Timeline(c, c1, c2, c3, c4) {
     );
   }
 
+  this.setParams = function(c_s, c_e) {
+    this.bezier.startCtrlPoint.x = c_s.x;
+    this.bezier.startCtrlPoint.y = this.height - c_s.y;
+    this.bezier.endCtrlPoint.x = c_e.x;
+    this.bezier.endCtrlPoint.y = this.height - c_e.y;
+  }
+
   /*
    * Event listeners
    */

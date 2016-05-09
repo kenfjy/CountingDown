@@ -1,6 +1,8 @@
 "use strict";
 
-var countTime = 60;
+var countTime = 600;
+var scp_x = 0.178, scp_y = 0.424, ecp_x = 0.516, ecp_y = 0.85;
+
 var endTime = 0;
 var currentTime = 0;
 
@@ -256,4 +258,15 @@ function loadSounds(obj) {
       loadSoundObj(obj[i]);
     }
   }
+}
+
+function randomParams() {
+  var c_s = new Vector(canvas.x, canvas.y);
+  var c_e = new Vector(canvas.x, canvas.y);
+  c_s.random(0, canvas.x*0.2, 0, canvas.y*0.2)
+  c_e.random(canvas.x*0.8, canvas.x, canvas.y*0.8, canvas.y)
+  console.log(c_s);
+  console.log(c_e);
+  timeline.setParams(c_s, c_e);
+  calc();
 }

@@ -24,7 +24,7 @@ function keyDown(event) {
     console.log("key : " + key);
     if (key === 'g') {
       flag.grid = !flag.grid;
-    } else if (key === 'c') {
+    } else if (key === 'd') {
       flag.canvas = !flag.canvas;
       dispCanvas();
     } else if (key === 'h') {
@@ -36,7 +36,7 @@ function keyDown(event) {
 
     } else if (key === 'T') {
       flag.timeline = !flag.timeline;
-    } else if (key === 'R') {
+    } else if (key === 'c') {
       flag.play = false;
       currentTime = 0;
       endTime = 0;

@@ -1,6 +1,13 @@
 var calcThreshold = 0.00005;
 var mouseThreshold = 30;
 
+/*
+ * RANDOM
+ */
+function getRandom(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
 /* 
  * VECTOR
  */
@@ -17,6 +24,15 @@ function Vector(t_x, t_y){
       y : this.y
     });
   };
+  this.random = function(r_xs, r_xe, r_ys, r_ye) {
+    var _xs = r_xs || 0;
+    var _xe = r_xe || this.x;
+    var _ys = r_ys || 0;
+    var _ye = r_ye || this.y;
+    this.x = getRandom(_xs, _xe);
+    this.y = getRandom(_ys, _ye);
+    console.log(_xe);
+  }
 } // vector
 
 /* 
