@@ -40,6 +40,8 @@ function keyDown(event) {
       flag.play = false;
       currentTime = 0;
       endTime = 0;
+    } else if (key === 'R') {
+      randomParams();
     } else if (key === 'r') {
       flag.reverse = !flag.reverse;
     } else if (key === 's') {
@@ -81,22 +83,26 @@ function keyDown(event) {
         break;
       case 32: // [SPACE]
         flag.play = !flag.play;
-        if (flag.play) {
-          if (currentTime == 0) {
-            endTime = new Date().getTime()+countTime*1000
-          } else {
-            var remainingTime = countTime*1000 - timeFlag[currentTime];
-            endTime = new Date().getTime()+remainingTime;
-          }
-        } else {
-          var timeNow = new Date().getTime();
-          var ellapsedTime = countTime * 1000 - (endTime - timeNow);
-        }
+        playTimer();
         break;
       default:
         console.log("undefined key : " + event.which);
 
     }
+  }
+}
+
+function playTimer() {
+  if (flag.play) {
+    if (currentTime == 0) {
+      endTime = new Date().getTime()+countTime*1000
+    } else {
+      var remainingTime = countTime*1000 - timeFlag[currentTime];
+      endTime = new Date().getTime()+remainingTime;
+    }
+  } else {
+    var timeNow = new Date().getTime();
+    var ellapsedTime = countTime * 1000 - (endTime - timeNow);
   }
 }
 
