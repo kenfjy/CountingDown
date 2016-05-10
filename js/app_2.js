@@ -74,6 +74,7 @@ function setup() {
   timeline = new Timeline(canvas, startPoint, startCtrlPoint, endCtrlPoint, endPoint);
 
   randomParams();
+  randomTime();
   calc();
 
   /* init views accordingly to flags */
@@ -88,10 +89,12 @@ function setup() {
     gainNode = audioContext.createGain();
     loadSounds(sounds);
     gainNode.connect(audioContext.destination);
+    /*
     flag.play = true;
     playTimer();
+    */
     var p = timeline.dumpCtrl();
-    $("#params p").text(p);
+    $("#params p").text(countTime + " | " + p);
   } catch(e) {
     flag.sound = false;
     alert('Web Audio API is not supported in this browser');
@@ -265,13 +268,16 @@ function loadSounds(obj) {
   }
 }
 
+function randomTime() {
+  var s = Math.floor(getRandom(500,700)/10)*10;
+  countTime = s;
+}
+
 function randomParams() {
   var c_s = new Vector(canvas.x, canvas.y);
   var c_e = new Vector(canvas.x, canvas.y);
   c_s.random(0, canvas.x*0.2, 0, canvas.y*0.2)
   c_e.random(canvas.x*0.8, canvas.x, canvas.y*0.8, canvas.y)
-  console.log(c_s);
-  console.log(c_e);
   timeline.setParams(c_s, c_e);
   calc();
 }
