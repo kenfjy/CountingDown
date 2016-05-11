@@ -63,8 +63,8 @@ function setup() {
   c.attr("width", canvas.x);
   c.attr("height", canvas.y);
   c.css("margin-top", ($(window).height()-canvas.y)/2);
-  if (canvas.x <= 300) {
-    $("html").css("font-size", "10px");
+  if (canvas.x <= 500) {
+    $("#counter p").css("font-size", "7.0rem");
   }
 
   var startPoint = new Vector(0,0);
@@ -264,8 +264,8 @@ function randomParams() {
   var c_s = new Vector(canvas.x, canvas.y);
   var c_e = new Vector(canvas.x, canvas.y);
   c_s.random(0, canvas.x*0.2, 0, canvas.y*0.2)
-  c_e.random(canvas.x*0.8, canvas.x, canvas.y*0.8, canvas.y)
-  console.log(c_s);
+    c_e.random(canvas.x*0.8, canvas.x, canvas.y*0.8, canvas.y)
+    console.log(c_s);
   console.log(c_e);
   timeline.setParams(c_s, c_e);
   calc();
