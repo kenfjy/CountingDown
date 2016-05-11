@@ -72,6 +72,7 @@ function keyDown(event) {
           if (countTime > 10) {
             countTime -= 10;
             calc();
+            console.log(countTime);
           }
         }
         break;
@@ -79,6 +80,7 @@ function keyDown(event) {
         if (!flag.play) {
           countTime += 10;
           calc();
+          console.log(countTime);
         }
         break;
       case 32: // [SPACE]
